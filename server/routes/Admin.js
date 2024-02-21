@@ -46,7 +46,7 @@ router.get("/availableUsers", authenticateJwt, async (req, res) => {
 // transaction logic
 router.post("/transaction", authenticateJwt, async (req, res) => {
 
-  const { sender, receiver, amount, pin } = req.body;
+  const { sender, receiver, amount, pin } = req.body; 
 
   try {
     const isValidSender = await User.findOne({ email: sender });
@@ -76,13 +76,16 @@ router.post("/transaction", authenticateJwt, async (req, res) => {
       return res.status(200).json({message: "Invalid PIN"})
     }
 
+    const senderName = `${isValidSender.firstName} ${isValidSender.lastName}`;
+    const receiverName = `${isValidReceiver.firstName} ${isValidReceiver.lastName}`;
+
     const numericAmount = parseFloat(amount);
     //check for insufficient balance
     if (isValidSender.amount < numericAmount) {
       const paymentEntry = {
         amount: amount,
-        sender: sender,
-        receiver: receiver,
+        sender: senderName,
+        receiver: receiverName,
         message: "Insufficient Balance",
         Time: formatDate(new Date().toISOString()),
       };
@@ -104,8 +107,8 @@ router.post("/transaction", authenticateJwt, async (req, res) => {
 
     // populate the database
     const paymentEntry = {
-      sender: sender,
-      receiver: receiver,
+      sender: senderName,
+      receiver: receiverName,
       message: "Transaction Successfull",
       amount: amount,
       Time: formatDate(new Date().toISOString()),
@@ -116,6 +119,8 @@ router.post("/transaction", authenticateJwt, async (req, res) => {
     isValidReceiver.ledger.push(paymentEntry);
     await isValidSender.save();
     await isValidReceiver.save();
+
+
     
     return res.status(200).json({
       message: `Transaction Successfull`,
