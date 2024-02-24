@@ -108,13 +108,6 @@ const Login = () => {
                   placeholder="••••••••"
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
-                <p className="flex justify-end mt-1">
-                  <button onClick={() => {
-                    navigate('/forgotPassword')
-                  }} className="font-medium hover:underline hover:text-black dark:text-primary-500 text-gray-700">
-                    forgot password?
-                  </button>
-                </p>
               </div>
                 
                 <div className="flex justify-center">
@@ -127,6 +120,18 @@ const Login = () => {
                       </span> 
                     </button>
                   </button>
+                  
+                </div>
+                
+                <div className="flex justify-center items-center pt-4">
+                  <p >
+                    <button onClick={() => {
+                      navigate('/forgotPassword')
+                    }} className="font-medium hover:underline hover:text-black dark:text-primary-500 text-gray-700">
+                      forgot password?
+                    </button>
+                  </p>
+                  
                 </div>
 
 
