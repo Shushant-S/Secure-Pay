@@ -18,6 +18,7 @@ const Dashboard = ({ userEmail, amount, isAuthenticated, paymentPin }) => {
   const [loading, setLoading] = useState(true);
   const [hideEye, setHideEye] = useState(false); 
   const firstName = localStorage.getItem("firstName");
+  const lastName = localStorage.getItem("lastName");
 
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
@@ -48,38 +49,32 @@ const Dashboard = ({ userEmail, amount, isAuthenticated, paymentPin }) => {
         return res.json();
       })
       .then((data) => {
+        
         setLedger(data);
 
-        const userTransactions = data.filter(
-          (item) => item.sender === userEmail || item.receiver === userEmail
-        );
+        let totalCredit = 0;
+        let totalDebit = 0;
 
-        const debitAmount = userTransactions
-          .filter(
-            (item) =>
-              item.sender === userEmail &&
-              item.message === "Transaction Successfull"
-          )
-          .reduce((total, item) => total + parseFloat(item.amount), 0);
-
-        const creditAmount = userTransactions
-          .filter(
-            (item) =>
-              item.receiver === userEmail &&
-              item.message === "Transaction Successfull"
-          )
-          .reduce((total, item) => total + parseFloat(item.amount), 0);
+        ledger.forEach(transaction => {
+            if (transaction.message === "Transaction Successfull") {
+                if (transaction.sender === (firstName + ' ' + lastName)) {
+                    totalDebit += parseFloat(transaction.amount);
+                } else if (transaction.receiver === (firstName + ' ' + lastName)) {
+                    totalCredit += parseFloat(transaction.amount);
+                }
+            }
+        });
 
         setLoading(false);
-        setTotalDebit(debitAmount);
-        setTotalCredit(creditAmount);
+        setTotalDebit(totalCredit);
+        setTotalCredit(totalDebit);
 
         return data;
       })
       .catch((error) => {
         setError(error.message);
       });
-  }, [userEmail]);
+  }, [firstName, lastName, userEmail, ledger]);
 
   // pie-chart hook
   useEffect(() => {
