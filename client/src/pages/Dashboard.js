@@ -74,7 +74,7 @@ const Dashboard = ({ userEmail, amount, isAuthenticated, paymentPin }) => {
       .catch((error) => {
         setError(error.message);
       });
-  }, [firstName, lastName, userEmail]);
+  }, [firstName, lastName, userEmail, ledger]);
 
   // pie-chart hook
   useEffect(() => {
